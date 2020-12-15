@@ -7,8 +7,13 @@
 %%%% trajectory and save them as .mat file for later processing.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+% bag1 = rosbag('slam_data1.bag');
+% bag1 = rosbag('slam_data2.bag');
+bag1 = rosbag('slam_data3.bag');
 % bag1 = rosbag('inblock_motion_select.bag');
-bag1 = rosbag('inblock_with_Z.bag'); %dataset with height adjustment
+% bag1 = rosbag('inblock_with_Z.bag'); %dataset with height adjustment
+
+
 %%
 Sel1 = select(bag1, 'Topic', '/gazebo/relative_dist');
 Sel2 = select(bag1, 'Topic', '/longi_distance/longi_dist');
@@ -45,7 +50,7 @@ for i=1:bag1.NumMessages
         timeLD(idx_ld) = timestamp;
     end
 end
-toc  %took 180 seconds to label the timestamps for 210k measurements
+toc  %took ~180 seconds to label the timestamps for 210k measurements
 
 timeGT = timeGT - bag1.StartTime;
 timeRSdist = timeRSdist - bag1.StartTime;
@@ -112,7 +117,7 @@ end
 %% Plot ground truth trajectory
 totaltime = bag1.EndTime-bag1.StartTime;
 
-filename = 'inblock_set.mat';
+filename = 'bag3_stage1.mat';
 save(filename,'totaltime','Ld_Tran','Ld_Quat','LdLength','gTX','gTY','gTLongiAngle','gTlength','RsLength','RsY','Rslongi_angle','timeGT','timeLD','timeRSdist','timeRSangle');
 
 %%

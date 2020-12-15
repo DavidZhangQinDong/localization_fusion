@@ -12,12 +12,13 @@
 close all
 % load('longi_good.mat') % old in-block dataset
 
-load('inblock_set1.mat');
-% load('inblock_set2.mat');
+% load('bag1_stage1.mat');
+% load('bag2_stage1.mat');
+% load('bag3_stage1.mat');
+load('inblock_motion_stage1.mat');
 
 %% Model parameter control panel
-camera_noise_dist = 0.01;
-camera_downsample_rate = 1000; % relative to ground truth publish rate(1kHz)
+camera_noise_dist = 0.01; %standard deviation of induced camera noise in meter
 
 % test cases that need to be done
 % 1) small noise same sigma
@@ -27,7 +28,9 @@ camera_downsample_rate = 1000; % relative to ground truth publish rate(1kHz)
 
 %% Downsample ground truth and simulate camera measurement by adding noise
 % RsLength comes from the recorded dataset
-
+if RsLength==0
+    RsLength = floor(gTlength/500);
+end
 gT_in_rs_time = linspace(1,gTlength, RsLength);
 
 Rs_X_simu = interp1(1:gTlength, gTX, gT_in_rs_time');
@@ -78,7 +81,7 @@ rmse_ld_y = sqrt(mean((Ld_Yd - gT_ld_interpY).^2));
 
 rmse_rs_x = sqrt(mean((Rs_X_simu - gT_rs_interpX).^2));
 rmse_rs_y = sqrt(mean((Rs_Y_simu - gT_rs_interpY).^2));
-EU_rmse_orig = rmse2d(gT_ld_interpX, gT_ld_interpY, Ld_Xd, Ld_Yd);
+EU_rmse_hdl = rmse2d(gT_ld_interpX, gT_ld_interpY, Ld_Xd, Ld_Yd);
 
 %% Partial sensor update in Y-direction
 Ld_sigma = 0.01;
@@ -119,8 +122,8 @@ rmse_fused_y = sqrt(mean((Fused_Y - gT_ld_interpY).^2));
 % Evaluate RMSE from fused localization result (LiDAR odometry aided by local landmark measurement)
 EU_rmse_after_y = rmse2d(gT_ld_interpX, gT_ld_interpY, Ld_Xd, Fused_Y);
 
-impv1 = (EU_rmse_orig-EU_rmse_after_y)/EU_rmse_orig * 100;
-fprintf('After taking local measurement in Y-direction, RMSE was reduced by %f cm (%f percent) \n',100*(EU_rmse_orig-EU_rmse_after_y), impv1);
+impv1 = (EU_rmse_hdl-EU_rmse_after_y)/EU_rmse_hdl * 100;
+fprintf('After taking local measurement in Y-direction, RMSE was reduced by %f cm (%f percent) \n',100*(EU_rmse_hdl-EU_rmse_after_y), impv1);
 
 %% Good result for correcting Y-distance, now adding additional X-measurement during turns
 uX = diff(Ld_Xd);
@@ -154,8 +157,8 @@ rmse_fused_x = sqrt(mean((Fused_X - gT_ld_interpX).^2));
 % Evaluate RMSE from fused localization result (LiDAR odometry aided by local landmark measurement)
 EU_rmse_after_xy = rmse2d(gT_ld_interpX, gT_ld_interpY, Fused_X, Fused_Y);
 
-impv2 = (EU_rmse_orig-EU_rmse_after_xy)/EU_rmse_orig * 100;
-fprintf('After taking local measurement in both X and Y direction, RMSE was reduced by %f cm (%f percent) \n', 100*(EU_rmse_orig-EU_rmse_after_xy),impv2);
+impv2 = (EU_rmse_hdl-EU_rmse_after_xy)/EU_rmse_hdl * 100;
+fprintf('After taking local measurement in both X and Y direction, RMSE was reduced by %f cm (%f percent) \n', 100*(EU_rmse_hdl-EU_rmse_after_xy),impv2);
 
 
 %% Plot XY traj 
@@ -170,6 +173,11 @@ title('Trajectory comparison before/after Localization');
 xlabel('X(m)'); ylabel('Y(m)');
 axis equal
 
+%% Saving localization results to be processed into animation
+% save('hdl_fuse_bag1.mat','gT_ld_interpX','gT_ld_interpY','Ld_Xd','Ld_Yd','Fused_X','Fused_Y');
+% save('hdl_fuse_bag2.mat','gT_ld_interpX','gT_ld_interpY','Ld_Xd','Ld_Yd','Fused_X','Fused_Y');
+% save('hdl_fuse_bag3.mat','gT_ld_interpX','gT_ld_interpY','Ld_Xd','Ld_Yd','Fused_X','Fused_Y');
+save('hdl_fuse_inblock.mat','gT_ld_interpX','gT_ld_interpY','Ld_Xd','Ld_Yd','Fused_X','Fused_Y');
 %% Additional functions
 function rmse2d = rmse2d(gtX, gtY, X, Y)
     % all 4 inputs have the same length already
