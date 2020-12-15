@@ -10,6 +10,7 @@ rosbag2mat.m
 Kalman2D_simulated_camera.m
 
 ## Evaluating result
+This steps requires results from incremental SLAM ICP in order to compare.
 evalResults.m
 
 ## Bonus
