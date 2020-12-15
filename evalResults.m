@@ -1,7 +1,7 @@
 % 2D localization around the ship's double hull block
 % 16833 SLAM course project
 % Group 1
-% last modified 12/14/2020
+% last modified 12/15/2020
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%% This script processes recorded data from a welding robot motion
 %%%% trajectory and simulates occasional local landmark measurements from

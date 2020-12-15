@@ -1,7 +1,7 @@
 % 2D localization within the ship's double hull block
 % 16833 SLAM course project
 % Group 1
-% last modified 12/6/2020
+% last modified 12/15/2020
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%% This script uses extracted data from a welding robot motion
 %%%% trajectory and simulates occasional local landmark measurements from
@@ -19,12 +19,6 @@ load('inblock_motion_stage1.mat');
 
 %% Model parameter control panel
 camera_noise_dist = 0.01; %standard deviation of induced camera noise in meter
-
-% test cases that need to be done
-% 1) small noise same sigma
-% 2) large noise same sigma
-% 3) large noise small sigma
-% 4) small noise large sigma
 
 %% Downsample ground truth and simulate camera measurement by adding noise
 % RsLength comes from the recorded dataset

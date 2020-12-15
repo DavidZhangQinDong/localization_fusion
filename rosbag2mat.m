@@ -1,7 +1,7 @@
 % Extract data from recording of welding robot traveling in or around the ship's double hull block
 % 16833 SLAM course project
 % Group 1
-% last modified 12/14/2020
+% last modified 12/15/2020
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%% This script pre-processes recorded data from a welding robot motion
 %%%% trajectory and save them as .mat file for later processing.
